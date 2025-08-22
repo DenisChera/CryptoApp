@@ -7,7 +7,7 @@ Key Features:
   
       - AES (Advanced Encryption Standard) – with CBC mode and 256-bit keys.
   
-  `   - RSA – key pair generation (public/private), encryption with the public key, and decryption with the private key.
+      - RSA – key pair generation (public/private), encryption with the public key, and decryption with the private key.
   
       - ChaCha20 – modern and efficient stream cipher with random key and nonce generation.
   
