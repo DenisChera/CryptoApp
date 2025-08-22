@@ -23,18 +23,18 @@ Key Features:
 
 Technologies Used:
 
-  -Python 3
+      -Python 3
     
-  -PyCryptodome – for AES, RSA, and ChaCha20 encryption.
+      -PyCryptodome – for AES, RSA, and ChaCha20 encryption.
     
-  -Tkinter – for the graphical interface.
+      -Tkinter – for the graphical interface.
     
-  -Pillow (PIL) – for background image handling and resizing.
+      -Pillow (PIL) – for background image handling and resizing.
 
 Design Highlights:
 
-  -Main window with a centered, responsive layout.
+      -Main window with a centered, responsive layout.
 
-  -Custom-styled buttons (colors, fonts, padding).
+      -Custom-styled buttons (colors, fonts, padding).
   
-  -Automatically resizable background image for a polished look.
+      -Automatically resizable background image for a polished look.
