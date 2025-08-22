@@ -338,7 +338,7 @@ class CryptographyApp:
     def update_background_image(self):
         # Update background image
         width, height = self.root.winfo_width(), self.root.winfo_height()
-        resized_image = self.background_image.resize((width, height), Image.ANTIALIAS)
+        resized_image = self.background_image.resize((width, height), Image.Resampling.LANCZOS)
         self.background_photo = ImageTk.PhotoImage(resized_image)
         self.canvas.create_image(0, 0, image=self.background_photo, anchor="nw")
 
