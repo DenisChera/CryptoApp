@@ -3,23 +3,23 @@ This project is a Python desktop application that provides a user-friendly graph
 
 Key Features:
 
-  -Support for 3 encryption algorithms:
-  
-      - AES (Advanced Encryption Standard) – with CBC mode and 256-bit keys.
-  
-      - RSA – key pair generation (public/private), encryption with the public key, and decryption with the private key.
-  
-      - ChaCha20 – modern and efficient stream cipher with random key and nonce generation.
-  
-  -Key management – generate, save, and load keys in .pem file format.
-  
-  -Bidirectional encryption & decryption (text → encrypted text → original text).
-  
-  -Graphical User Interface (GUI) built with Tkinter, featuring a dynamic resizable background.
-  
-  -Intuitive Encrypt and Decrypt buttons with dedicated input/output fields.
-  
-  -Error handling with warnings for invalid or missing keys, unsupported algorithms, etc.
+      -Support for 3 encryption algorithms:
+      
+          - AES (Advanced Encryption Standard) – with CBC mode and 256-bit keys.
+      
+          - RSA – key pair generation (public/private), encryption with the public key, and decryption with the private key.
+      
+          - ChaCha20 – modern and efficient stream cipher with random key and nonce generation.
+      
+      -Key management – generate, save, and load keys in .pem file format.
+      
+      -Bidirectional encryption & decryption (text → encrypted text → original text).
+      
+      -Graphical User Interface (GUI) built with Tkinter, featuring a dynamic resizable background.
+      
+      -Intuitive Encrypt and Decrypt buttons with dedicated input/output fields.
+      
+      -Error handling with warnings for invalid or missing keys, unsupported algorithms, etc.
 
 Technologies Used:
 
