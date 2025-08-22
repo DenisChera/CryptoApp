@@ -1,4 +1,3 @@
-
 import time
 
 from Cryptodome.Cipher import AES, PKCS1_OAEP, ChaCha20
@@ -14,7 +13,7 @@ class CryptographyApp:
         self.root = root
         self.root.title("CryptoApp")
 
-        # Setarea imaginii de fundal
+        # Setting background image
         self.root.geometry("800x600")
         self.bg_image_path = "leadspace.png"
         self.background_image = Image.open(self.bg_image_path)
@@ -25,35 +24,35 @@ class CryptographyApp:
         self.update_background_image()
 
         self.last_resize_time = time.time()
-        self.resize_interval = 0  # Intervalul minim între redimensionări (în secunde)
+        self.resize_interval = 0  # Minimum interval between resizes (in seconds)
 
         self.algorithm_var = StringVar()
         self.message_var = StringVar()
         self.result_var = StringVar()
 
-        # Eticheta și combobox pentru a selecta algoritmul
-        self.algorithm_label = ttk.Label(root, text="Algoritm:", font=("Snap ITC", 15), foreground="yellow",
+        # Label and combobox to select the algorithm
+        self.algorithm_label = ttk.Label(root, text="Algorithm:", font=("Snap ITC", 15), foreground="yellow",
                                          background="black")
         self.algorithm_dropdown = ttk.Combobox(root, textvariable=self.algorithm_var, state="readonly", width=30,
                                                font=("Tahoma", 12),
                                                values=["AES", "RSA", "ChaCha20"])
 
-        # Eticheta și câmpul de intrare pentru mesaj
-        self.message_label = ttk.Label(root, text="Mesaj:", font=("Snap ITC", 14), foreground="yellow",
+        # Label and input field for the message
+        self.message_label = ttk.Label(root, text="Message:", font=("Snap ITC", 14), foreground="yellow",
                                        background="black")
         self.message_entry = ttk.Entry(root, textvariable=self.message_var, width=30, font=("Tahoma", 12))
 
-        # Eticheta și câmpul de intrare pentru rezultat
-        self.result_label = ttk.Label(root, text="Rezultat:", font=("Snap ITC", 14), foreground="yellow",
+        # Label and input field for the result
+        self.result_label = ttk.Label(root, text="Result:", font=("Snap ITC", 14), foreground="yellow",
                                       background="black")
         self.result_entry = ttk.Entry(root, textvariable=self.result_var, state="readonly", width=70,
                                       font=("Tahoma", 12))
 
-        # crearea butoanelor pentru criptare și decriptare
-        self.encrypt_button = ttk.Button(root, text="Criptare", command=self.encrypt_message, style="Red.TButton")
-        self.decrypt_button = ttk.Button(root, text="Decriptare", command=self.decrypt_message, style="Green.TButton")
+        # Creating buttons for encryption and decryption
+        self.encrypt_button = ttk.Button(root, text="Encrypt", command=self.encrypt_message, style="Red.TButton")
+        self.decrypt_button = ttk.Button(root, text="Decrypt", command=self.decrypt_message, style="Green.TButton")
 
-        # Plasarea componentelor în fereastra principală, în centrul acesteia
+        # Placing components in the main window, centered
         self.algorithm_label.place(relx=0.32, rely=0.3, anchor="center")
         self.algorithm_dropdown.place(relx=0.3, rely=0.35, anchor="center")
 
@@ -68,7 +67,7 @@ class CryptographyApp:
 
         self.root.bind("<Configure>", self.on_resize)
 
-        # Stilizare butoane
+        # Button styling
         style = ttk.Style()
         style.configure("Red.TButton",
                         font=("Britannic Bold", 15),
@@ -89,264 +88,262 @@ class CryptographyApp:
         message = self.message_var.get()
 
         if algorithm == "AES":
-            # Generare cheie aleatoare pentru AES
+            # Generate random AES key
             key = self.generate_AES_key()
-            # Criptare mesaj cu cheia AES generata
+            # Encrypt message with generated AES key
             ciphertext = self.encrypt_AES(message.encode(), key)
-            # Setează rezultatul în câmpul aferent
+            # Set the result in the output field
             self.result_var.set(ciphertext.hex())
         elif algorithm == "RSA":
-            # Generare pereche de chei RSA
+            # Generate RSA key pair
             public_key = self.generate_RSA_keys()
-            # Criptare mesaj cu cheia publică RSA
+            # Encrypt message with RSA public key
             ciphertext = self.encrypt_RSA(message, public_key)
-            # Setează rezultatul în câmpul aferent
+            # Set the result in the output field
             self.result_var.set(ciphertext.hex())
         elif algorithm == "ChaCha20":
-            # Generare cheie aleatoare pentru ChaCha20
+            # Generate random ChaCha20 key
             key = self.generate_ChaCha20_key()
-            # Criptare mesaj cu cheia ChaCha20
+            # Encrypt message with ChaCha20 key
             ciphertext = self.encrypt_ChaCha20(message.encode(), key)
-            # Setează rezultatul în câmpul aferent
+            # Set the result in the output field
             self.result_var.set(ciphertext.hex())
 
 
     def decrypt_message(self):
-        algorithm = self.algorithm_var.get() # Obține algoritmul selectat din variabila `algorithm_var`
-        ciphertext = bytes.fromhex(self.result_var.get()) # Converteste textul cifrat din formatul hexazecimal la bytes
+        algorithm = self.algorithm_var.get()  # Get the selected algorithm from `algorithm_var`
+        ciphertext = bytes.fromhex(self.result_var.get())  # Convert ciphertext from hex to bytes
 
         if algorithm == "AES":
-            key = self.load_AES_key() # Încarcă cheia AES din fisier
+            key = self.load_AES_key()  # Load AES key from file
             if key:
-                plaintext = self.decrypt_AES(ciphertext, key) # Decriptează textul folosind cheia AES
+                plaintext = self.decrypt_AES(ciphertext, key)  # Decrypt using AES key
                 if plaintext is not None:
-                    self.result_var.set(plaintext.decode()) # Setează textul decriptat ca rezultat
+                    self.result_var.set(plaintext.decode())  # Set decrypted text as result
             else:
-                messagebox.showwarning("Avertisment", "Cheia nu a fost încărcată!") # Afișează un avertisment dacă cheia nu a fost încărcată
+                messagebox.showwarning("Warning", "Key not loaded!")  # Show warning if key not loaded
         elif algorithm == "RSA":
-            private_key = self.load_RSA_private_key() # Încarcă cheia privată RSA din fisier
+            private_key = self.load_RSA_private_key()  # Load RSA private key from file
             if private_key:
-                plaintext = self.decrypt_RSA(ciphertext, private_key) # Decriptează textul folosind cheia privată RSA
+                plaintext = self.decrypt_RSA(ciphertext, private_key)  # Decrypt using RSA private key
                 if plaintext is not None:
-                    self.result_var.set(plaintext.decode()) # Setează textul decriptat ca rezultat
+                    self.result_var.set(plaintext.decode())  # Set decrypted text as result
             else:
-                messagebox.showwarning("Avertisment", "Cheia privată nu a fost încărcată!") # Afișează un avertisment dacă cheia privată nu a fost încărcată
+                messagebox.showwarning("Warning", "Private key not loaded!")  # Show warning if private key not loaded
         elif algorithm == "ChaCha20":
-            key = self.load_ChaCha20_key() # Încarcă cheia ChaCha20 din fisier
+            key = self.load_ChaCha20_key()  # Load ChaCha20 key from file
             if key:
-                plaintext = self.decrypt_ChaCha20(ciphertext, key) # Decriptează textul folosind cheia ChaCha20
+                plaintext = self.decrypt_ChaCha20(ciphertext, key)  # Decrypt using ChaCha20 key
                 if plaintext is not None:
-                    self.result_var.set(plaintext.decode())  # Setează textul decriptat ca rezultat
+                    self.result_var.set(plaintext.decode())  # Set decrypted text as result
             else:
-                messagebox.showwarning("Avertisment", "Cheia nu a fost încărcată sau este incorecta!") # Afișează un avertisment dacă cheia nu a fost încărcată sau este incorectă
+                messagebox.showwarning("Warning", "Key not loaded or incorrect!")  # Show warning if key missing/invalid
         else:
-            messagebox.showwarning("Avertisment", "Algoritmul nu este suportat.")  # Afișează un avertisment dacă algoritmul nu este suportat
+            messagebox.showwarning("Warning", "Unsupported algorithm.")  # Show warning if algorithm not supported
 
     def encrypt_AES(self, message, key):
-        # Generăm un vector de inițializare aleatoriu (IV) de dimensiune 16 bytes
+        # Generate a random Initialization Vector (IV) of 16 bytes
         iv = get_random_bytes(16)
-        # Creăm o instanță a obiectului de criptare AES, utilizând cheia și modul CBC (Cipher-Block Chaining)
+        # Create AES cipher in CBC mode with the generated key and IV
         cipher = AES.new(key, AES.MODE_CBC, iv)
-        # Criptăm mesajul aplicând padding corespunzător dimensiunii blocului AES
-        # Utilizăm funcția `pad` din modulul `Cryptodome.Util.Padding` pentru a adăuga padding
-        # La final, obținem textul criptat
+        # Encrypt message with proper padding
         ciphertext = cipher.encrypt(pad(message, AES.block_size))
-        # Returnam IV-ul concatenat cu textul criptat
+        # Return IV concatenated with ciphertext
         return iv + ciphertext
 
     def decrypt_AES(self, ciphertext, key):
         try:
-            # Extragem IV-ul din textul criptat (primii 16 bytes)
+            # Extract IV from the first 16 bytes
             iv = ciphertext[:16]
-            # Extragem textul criptat fără IV
+            # Extract ciphertext without IV
             ciphertext = ciphertext[16:]
-            # Initializam un obiect de decriptare AES, utilizand cheia, modulul CBC si IV-ul
+            # Initialize AES cipher for decryption
             cipher = AES.new(key, AES.MODE_CBC, iv)
-            # Decriptam textul criptat, eliminand padding-ul adaugat la criptare
+            # Decrypt and unpad message
             plaintext = unpad(cipher.decrypt(ciphertext), AES.block_size)
             return plaintext
         except ValueError:
-            messagebox.showwarning("Avertisment", "Cheia nu este corectă.")
+            messagebox.showwarning("Warning", "Invalid key.")
 
     def pad_message(self, message):
-        # Calculăm lungimea padding-ului necesar pentru ca mesajul să fie multiplu al mărimii blocului AES
+        # Calculate padding length for AES block size
         padding_length = AES.block_size - (len(message) % AES.block_size)
-        # Creăm un șir de bytes cu lungimea padding-ului și valorile padding-ului
+        # Create padding with the padding length
         padding = bytes([padding_length]) * padding_length
-        # Concatenăm mesajul original cu padding-ul generat
+        # Return message + padding
         return message + padding
 
     def unpad_message(self, padded_message):
-        # Extragem ultimul byte din mesajul cu padding, care reprezintă lungimea padding-ului
+        # Get last byte (padding length)
         padding_length = padded_message[-1]
-        # Eliminăm padding-ul din mesajul cu padding
+        # Remove padding
         return padded_message[:-padding_length]
 
     def encrypt_RSA(self, message, public_key):
-        # Cream un obiect cipher folosind cheia publica primita
+        # Create cipher using public key
         cipher = PKCS1_OAEP.new(public_key)
-        # Criptam mesajul utilizand cipher-ul si returnam rezultatul
+        # Encrypt message
         ciphertext = cipher.encrypt(message.encode())
         return ciphertext
 
     def decrypt_RSA(self, ciphertext, private_key):
-        # Importam cheia privata din formatul specific RSA
+        # Import private RSA key
         key = RSA.import_key(private_key)
-        # Cream un obiect cipher folosind cheia privata
+        # Create cipher with private key
         cipher = PKCS1_OAEP.new(key)
 
         try:
-            # Decriptam textul cifrat folosind cipher-ul
+            # Decrypt ciphertext
             plaintext = cipher.decrypt(ciphertext)
             return plaintext
         except ValueError:
-            messagebox.showwarning("Avertisment", "Cheia nu este corectă!")
+            messagebox.showwarning("Warning", "Invalid key!")
         except TypeError:
-            messagebox.showwarning("Avertisment", "Cheia nu este privată!")
+            messagebox.showwarning("Warning", "Key is not private!")
 
     def encrypt_ChaCha20(self, message, key):
-        # Cream un obiect cipher de tip ChaCha20 folosind cheia generata
+        # Create ChaCha20 cipher with generated key
         cipher = ChaCha20.new(key=key)
-        # Generam un nonce (numar o singura utilizare) asociat cu cipher-ul
+        # Generate nonce
         nonce = cipher.nonce
-        # Criptam mesajul folosind cipher-ul si returnam rezultatul
+        # Encrypt message
         ciphertext = cipher.encrypt(message)
         return nonce + ciphertext
 
     def decrypt_ChaCha20(self, ciphertext, key):
-        # Extragem nonce-ul din textul cifrat
+        # Extract nonce from ciphertext
         nonce = ciphertext[:8]
         ciphertext = ciphertext[8:]
-        # Cream un obiect cipher de tip ChaCha20 folosind cheia si nonce-ul
+        # Create cipher with key and nonce
         cipher = ChaCha20.new(key=key, nonce=nonce)
 
         try:
             plaintext = cipher.decrypt(ciphertext)
             return plaintext
         except ValueError:
-            messagebox.showwarning("Avertisment", "Cheia nu este corectă!")
+            messagebox.showwarning("Warning", "Invalid key!")
         except UnicodeDecodeError:
-            messagebox.showwarning("Avertisment", "Cheia nu este corectă!")
+            messagebox.showwarning("Warning", "Invalid key!")
 
 
     def generate_AES_key(self):
-        # Generăm o cheie AES aleatorie de 32 de octeți
+        # Generate random AES key of 32 bytes
         key = get_random_bytes(32)
-        # Se deschide o fereastră de dialog pentru salvarea cheii într-un fișier
-        file_path = filedialog.asksaveasfilename(title="Salvează cheia", defaultextension=".pem",
+        # Open dialog to save key
+        file_path = filedialog.asksaveasfilename(title="Save key", defaultextension=".pem",
                                                  filetypes=[("Key files", "*.pem")])
         if file_path:
-            # Salvăm cheia AES în fișierul specificat
+            # Save AES key to file
             self.save_aes_chacha_key_to_file(file_path, key)
         return key
 
     def load_AES_key(self):
-        # Se deschide o fereastră de dialog pentru încărcarea cheii dintr-un fișier
-        file_path = filedialog.askopenfilename(title="Încarcă cheia", filetypes=[("Key files", "*.pem")])
+        # Open dialog to load AES key
+        file_path = filedialog.askopenfilename(title="Load key", filetypes=[("Key files", "*.pem")])
         if file_path:
-            # Se încarcă cheia AES din fișierul specificat
+            # Load AES key from file
             key = self.load_aes_chacha_key_from_file(file_path)
             return key
         return None
 
     def generate_RSA_keys(self):
-        # Generăm o pereche de chei RSA cu o lungime de 2048 de biți
+        # Generate RSA key pair (2048 bits)
         key = RSA.generate(2048)
 
-        # Exportăm cheia privată și cheia publică în formatele necesare
+        # Export private and public keys
         private_key = key.export_key()
         public_key = key.publickey().export_key()
 
-        # Se deschid ferestre de dialog pentru salvarea cheii private și cheii publice în fișiere separate
-        private_key_path = filedialog.asksaveasfilename(title="Salvează cheia privată", defaultextension=".pem",
+        # Open dialogs to save private and public keys
+        private_key_path = filedialog.asksaveasfilename(title="Save private key", defaultextension=".pem",
                                                         filetypes=[("Key files", "*.pem")])
         if private_key_path:
-            # Salvăm cheia privată în fișierul specificat
+            # Save private key
             self.save_key_to_file(private_key_path, private_key)
-        public_key_path = filedialog.asksaveasfilename(title="Salvează cheia publică", defaultextension=".pem",
+        public_key_path = filedialog.asksaveasfilename(title="Save public key", defaultextension=".pem",
                                                        filetypes=[("Key files", "*.pem")])
         if public_key_path:
-            # Salvăm cheia publică în fișierul specificat
+            # Save public key
             self.save_key_to_file(public_key_path, public_key)
-        # Marcăm faptul că, cheia a fost încărcată
+        # Mark key as loaded
         self.key_loaded = True
-        # Returnăm cheia publică
+        # Return public key
         return key.publickey()
 
     def load_RSA_private_key(self):
-        # Se deschide o fereastră de dialog pentru încărcarea cheii private dintr-un fișier
-        file_path = filedialog.askopenfilename(title="Încarcă cheia privată", filetypes=[("Key files", "*.pem")])
+        # Open dialog to load RSA private key
+        file_path = filedialog.askopenfilename(title="Load private key", filetypes=[("Key files", "*.pem")])
         if file_path:
-            # Se încarcă cheia privată din fișierul specificat
+            # Load private key from file
             private_key = self.load_key_from_file(file_path)
             return private_key
         return None
 
     def load_RSA_public_key(self):
-        # Se deschide o fereastră de dialog pentru încărcarea cheii publice dintr-un fișier
-        file_path = filedialog.askopenfilename(title="Încarcă cheia publică", filetypes=[("Key files", "*.pem")])
+        # Open dialog to load RSA public key
+        file_path = filedialog.askopenfilename(title="Load public key", filetypes=[("Key files", "*.pem")])
         if file_path:
-            # Se încarcă cheia publică din fișierul specificat
+            # Load public key from file
             public_key = self.load_key_from_file(file_path)
             return public_key
         return None
 
     def generate_ChaCha20_key(self):
-        # Generează o cheie aleatoare pentru algoritmul ChaCha20
+        # Generate random ChaCha20 key
         key = get_random_bytes(32)
-        # Se deschide o fereastră de dialog pentru a permite utilizatorului să salveze cheia într-un fișier
-        file_path = filedialog.asksaveasfilename(title="Salvează cheia", defaultextension=".pem",
+        # Open dialog to save key
+        file_path = filedialog.asksaveasfilename(title="Save key", defaultextension=".pem",
                                                  filetypes=[("Key files", "*.pem")])
         if file_path:
-            # Salvează cheia în fișierul specificat utilizând metoda save_aes_chacha_key_to_file
+            # Save key to file
             self.save_aes_chacha_key_to_file(file_path, key)
         return key
 
     def load_ChaCha20_key(self):
-        # Se deschide o fereastră de dialog pentru încărcarea cheii pentru algoritmul ChaCha20 dintr-un fișier
-        file_path = filedialog.askopenfilename(title="Încarcă cheia", filetypes=[("Key files", "*.pem")])
+        # Open dialog to load ChaCha20 key
+        file_path = filedialog.askopenfilename(title="Load key", filetypes=[("Key files", "*.pem")])
         if file_path:
-            # Se încarcă cheia din fișierul specificat utilizând metoda load_aes_chacha_key_from_file
+            # Load key from file
             key = self.load_aes_chacha_key_from_file(file_path)
             return key
         return None
 
     def save_key_to_file(self, file_path, key):
-        # Salvează cheia într-un fișier binar
+        # Save key to binary file
         with open(file_path, "wb") as file:
             file.write(key)
 
     def save_aes_chacha_key_to_file(self, file_path, key):
-        # Convertșe cheia în reprezentarea hexadecimală
+        # Convert key to hex representation
         key_hex = key.hex()
-        # Salvează cheia într-un fișier text
+        # Save key as text
         with open(file_path, "w") as file:
             file.write(key_hex)
         return key
 
     def load_key_from_file(self, file_path):
-        # Încarcă cheia dintr-un fișier binar
+        # Load key from binary file
         with open(file_path, "rb") as file:
             key = file.read()
         return key
 
     def load_aes_chacha_key_from_file(self, file_path):
-        # Încarcă cheia dintr-un fișier text
+        # Load key from text file
         with open(file_path, "r") as file:
             key_hex = file.read()
-        # Convertește cheia din reprezentarea hexadecimală în bytes
+        # Convert hex key to bytes
         key = bytes.fromhex(key_hex)
         return key
 
     def update_background_image(self):
-        # Actualizează imaginea de fundal
+        # Update background image
         width, height = self.root.winfo_width(), self.root.winfo_height()
         resized_image = self.background_image.resize((width, height), Image.ANTIALIAS)
         self.background_photo = ImageTk.PhotoImage(resized_image)
         self.canvas.create_image(0, 0, image=self.background_photo, anchor="nw")
 
     def on_resize(self, event):
-        # Redimensionează imaginea de fundal dacă s-a schimbat dimensiunea ferestrei
+        # Resize background when window size changes
         current_time = time.time()
         if current_time - self.last_resize_time > self.resize_interval:
             self.update_background_image()
